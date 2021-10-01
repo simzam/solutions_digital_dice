@@ -2,7 +2,7 @@
 solution of execise #5 in "Digital Dice" by Nahin
 
 Implementation does not care if several elevator have the same shortest distance,
-draw one of them at random. Should be a sufficient solution given enough trials.
+draw one of them at random. Should be a sufficient solution given enough simulations.
 
 0 : UP
 1 : DOWN
@@ -39,7 +39,6 @@ def build_elevators(num):
 
 
 def find_closest_elevator(num):
-    # elevators = []
     tmp_min = 1000
     tmp_dir = -1
     for i in range(num):
@@ -62,48 +61,33 @@ def find_closest_elevator(num):
         if distance < tmp_min:
             tmp_min = distance
             tmp_dir = direction
-        # elevators.append([direction, distance])
-    # print(elevators)
-    # elevators.sort(key=lambda x: [1])
-    # print(elevators)
-    # return elevators[0][0]
     return tmp_dir
 
 # too simple implementation, it is some trouble with discretizatip
-def simple_elevators(num):
-    for i in range(num):
-        floor = rd.randint(1, 6)
-        if floor < 2:
-            return 1
-    return 0
 
 
-def elevator_sim(num, trials):
+# def simple_elevators(num):
+#     for i in range(num):
+#         floor = rd.randint(1, 6)
+#         if floor < 2:
+#             return 1
+#     return 0
+
+
+def simulate(num, simulations):
     counter = 0
-    for i in range(trials):
-        # elevators = build_elevators(num)
-
-        # elevators.sort(key=lambda x: x[1])
-
-        # direction = elevators[0][1]
-
-        # print(elevators)
-
-        # if num > 1 and elevators[0][2] == elevators[1][2]:
-        #    i -= 1
-        #    continue
-
+    for _ in range(simulations):
         if find_closest_elevator(num) == 1:
             counter += 1
+    return (counter / simulations)
 
-        # if simple_elevators(num) == 0:
-        #    counter += 1
 
-    return (counter / trials)
+def main():
+    elevators = 2
+    simulations = 100000
+    exp1 = simulate(elevators, simulations)
+    print(exp1, 13/18)
 
 
 if __name__ == '__main__':
-    elevators = 2
-    trials = 100000
-    exp1 = elevator_sim(elevators, trials)
-    print(exp1, 13/18)
+    main()
