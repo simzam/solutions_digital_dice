@@ -1,39 +1,54 @@
+
 import numpy as np
 
-deli_worker = 1
 
-deli_queue = 0
+def simulate():
+    for i in range(opening_seconds):
+        deli_queue += np.random.poisson(arriving_customers_hour / 3600)
 
-arriving_customers_hour = 30
-serving_customers_hour = 40
+        if deli_queue > max_queue_len:
+            max_queue_len = deli_queue
 
-seconds_hour = 3600
-opening_hours = 10
-opening_seconds = opening_hours * seconds_hour
-idle_time = 0
-max_queue_len = 0
+        if deli_queue > 0:
+            deli_queue -= np.random.poisson(serving_customers_hour / 3600)
+        else:
+            idle_time += 1
 
-avg_people_in_queue = 0
+        avg_people_in_queue += deli_queue
 
-for i in range(opening_seconds):
-    deli_queue += np.random.poisson(arriving_customers_hour / 3600)
+    idle_time /= opening_seconds
+    avg_people_in_queue /= opening_seconds
 
-    if deli_queue > max_queue_len:
-        max_queue_len = deli_queue
+    disp = "simulation ran for {} seconds, {} worker(s) had a max queue of {} and an average of {} people. The percentage of idle time is {}"
 
-    if deli_queue > 0:
-        deli_queue -= np.random.poisson(serving_customers_hour / 3600)
-    else:
-        idle_time += 1
+    # format.(opening_seconds, deli_worker, max_queue_len, avg_people_in_queue, idle_time / opening_seconds)
 
-    avg_people_in_queue += deli_queue
+    print(disp.format(opening_seconds, deli_worker,
+          max_queue_len, avg_people_in_queue, idle_time))
 
-idle_time /= opening_seconds
-avg_people_in_queue /= opening_seconds
+    return disp
 
-disp = "simulation ran for {} seconds, {} worker(s) had a max queue of {} and an average of {} people. The percentage of idle time is {}"
 
-# format.(opening_seconds, deli_worker, max_queue_len, avg_people_in_queue, idle_time / opening_seconds)
+def main():
+    deli_workers = 1
+    deli_queue = []
+    deli_queue_max_len = 0
+    deli_queue_avg_len = 0
 
-print(disp.format(opening_seconds, deli_worker,
-      max_queue_len, avg_people_in_queue, idle_time))
+    arriving_customers_hour = 30
+    serving_customers_hour = 40
+
+    seconds_hour = 3600
+    opening_hours = 10
+    opening_seconds = opening_hours * seconds_hour
+
+    deli_workers_idle_time = 0
+    max_queue_len = 0
+
+    avg_people_in_queue = 0
+
+    simulate()
+
+
+if __name__ == '__main__':
+    main()
