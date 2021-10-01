@@ -33,8 +33,7 @@ avg_people_in_queue /= opening_seconds
 
 disp = "simulation ran for {} seconds, {} worker(s) had a max queue of {} and an average of {} people. The percentage of idle time is {}"
 
-#format.(opening_seconds, deli_worker, max_queue_len, avg_people_in_queue, idle_time / opening_seconds)
+# format.(opening_seconds, deli_worker, max_queue_len, avg_people_in_queue, idle_time / opening_seconds)
 
-print(disp.format(opening_seconds, deli_worker, max_queue_len, avg_people_in_queue, idle_time))
-
-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
+print(disp.format(opening_seconds, deli_worker,
+      max_queue_len, avg_people_in_queue, idle_time))
