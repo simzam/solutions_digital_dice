@@ -41,11 +41,35 @@ def generate_sons_probs(max_sons):
     return sons_probs
 
 
+def add_lists(lst1, lst2):
+    retlst = []
+    for elem1, elem2 in zip(lst1, lst2):
+        retlst.append(elem1 + elem2)
+    if len(lst1) > len(lst2):
+        return retlst + lst1[len(lst2):]
+    else:
+        return retlst + lst2[len(lst1):]
+
+
 def main():
+    simulations = 1000
     max_sons = 7
-    print(generate_sons_probs(max_sons), sum(generate_sons_probs(max_sons)))
+    probs = generate_sons_probs(max_sons)
+    total_sons = []
+    for i in range(simulations):
+        # print(len(total_sons))
+        male_offspring = experiment(probs)
+        if len(male_offspring) == 0:
+            continue
+        #print(i, male_offspring, total_sons)
+        tmp_sons = [elem_prev + elem for elem_prev,
+                    elem in zip(total_sons, male_offspring)]
+        if len(male_offspring) > len(total_sons):
+            total_sons = tmp_sons + male_offspring[len(total_sons):]
+        else:
+            total_sons = tmp_sons + total_sons[len(male_offspring):]
+    return list(map(lambda x: x/simulations, total_sons))
 
 
 if __name__ == '__main__':
-    probs = generate_sons_probs(7)
-    print(experiment(probs))
+    print(main())
