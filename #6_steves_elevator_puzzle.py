@@ -1,6 +1,7 @@
 
 import random
 #remember that ordere matters
+
 def less_than(nums, lim):
     count = 1
     nums = list(set(nums))
@@ -8,7 +9,6 @@ def less_than(nums, lim):
         if num < lim:
             count += 1
     return count
-
 
 def main():
     num_floors = 11

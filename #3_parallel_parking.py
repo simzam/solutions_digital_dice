@@ -1,9 +1,10 @@
 import random as rn
+import numpy as np
 
 N_vals = [N for N in range(4, 13)] + [20, 30]
 trials = 10**4
 
-# TODO use flag to continue 
+# TODO use flag to continue
 def check_mutual_pairs(elems):
     mutual_pairs = 0
     skip = 0
@@ -29,12 +30,12 @@ def check_mutual_pairs(elems):
         mutual_pairs += 1
         #print("in")
     return mutual_pairs
-            
+
 
 def car_generator(N):
     cars = [rn.random() for _ in range(N)]
     return sorted(cars)
-        
+
 if __name__ == "__main__":
     test_cars = [0, 0.15, 0.26, 0.27, 0.31, 0.311, 0.400001, 0.400002, 0.4000023]
     print(check_mutual_pairs(test_cars)/(len(test_cars)))
