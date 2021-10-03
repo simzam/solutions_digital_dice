@@ -1,3 +1,19 @@
+"""problem 19: Electing Emperor and Popes
+
+When the cardinals elect a new pope, the all have one vote and they
+can only vote on the cardinals. In reality there are probably a
+limited number of acceptable candidates. They all vote and if no
+cardinal received enough votes to declare a winner, they all vote again.
+
+This simulation explores the probability for winning a vote in a given
+round. And how much changes if we refuse or let the candidates vote
+for themselves.
+
+1) N: the number of voters.
+2) M: the number of votes necessary to win.
+3) n: the size of the set voteable candidates.
+
+"""
 import random as rn
 
 
