@@ -33,8 +33,8 @@ def vote(N, n, self_vote=True):
     return votes
 
 
-def decide_election(N, M, n):
-    votes = vote(N, n)
+def decide_election(N, M, n, self_vote):
+    votes = vote(N, n, self_vote)
     for vals in votes.values():
         if vals >= M:
             return 1
