@@ -17,12 +17,15 @@ for themselves.
 import random as rn
 
 
-def vote(N, n):
+def vote(N, n, self_vote=True):
     voters = [i for i in range(N)]
     candidates = voters[:n]
     votes = dict()
     for voter in voters:
         vote = rn.choice(candidates)
+        if not self_vote:
+            while vote == voter:
+                vote = rn.choice
         try:
             votes[vote] += 1
         except KeyError:
@@ -38,12 +41,12 @@ def decide_election(N, M, n):
     return 0
 
 
-def simulate(N, M, ns, sims):
-    retval = "N = {}, M = {}, n = {}, % at first vote {}"
+def simulate(N, M, ns, sims, self_vote=True):
+    retval = "N = {:2}, M = {:2}, n = {}, % at first vote {:f}"
     for n in ns:
         count = 0
         for _ in range(sims):
-            count += decide_election(N, M, n)
+            count += decide_election(N, M, n, self_vote)
         print(retval.format(N, M, n, count / sims))
 
 
@@ -53,11 +56,17 @@ def main():
 
     N = 25
     M = 17
-    simulate(N, M, n, simulations)
+    print("NO SELF-VOTE")
+    simulate(N, M, n, simulations, self_vote=False)
+    print("\nSELF-VOTE")
+    simulate(N, M, n, simulations, self_vote=True)
 
     N = 7
     M = 4
-    simulate(N, M, n, simulations)
+    print("\nNO SELF-VOTE")
+    simulate(N, M, n, simulations, self_vote=False)
+    print("\nSELF-VOTE")
+    simulate(N, M, n, simulations, self_vote=True)
 
 
 if __name__ == '__main__':
