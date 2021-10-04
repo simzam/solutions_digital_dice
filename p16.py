@@ -1,15 +1,18 @@
-"""problem 16
+"""
+Problem 16
 
-decision making organ consisting of five separate and indedenpendent voters.
-These voters will make a decision with two possible outcomes, yes or no. This
-decision might be  right or wrong.
+decision making organ consisting of five separate and indedenpendent
+voters.  These voters will make a decision with two possible outcomes,
+yes or no. This decision might be right or wrong.
 
 The decision is made by simple majority. The decisions can either be right or wrong.
+
 """
 import math
 import random
 
 sims = 10000
+
 
 def make_case(p):
     if random.random() < p:
@@ -20,19 +23,19 @@ def make_case(p):
 
 def decide_case(case, voters):
     votes = [-1] * len(voters)
-    for i,voter in enumerate(voters):
+    for i, voter in enumerate(voters):
         if random.random() < voter:
             votes[i] = case
         else:
             votes[i] = (case + 1) % 2
     #print(case, votes)
     return votes
-    #return 1 if sum(votes) > len(voters) / 2 else 0
+    # return 1 if sum(votes) > len(voters) / 2 else 0
 
 
 def decide_case2(case, voters):
     votes = [-1] * len(voters)
-    for i,voter in enumerate(voters):
+    for i, voter in enumerate(voters):
         if random.random() < voter:
             votes[i] = case
         else:
@@ -40,7 +43,7 @@ def decide_case2(case, voters):
     #print(case, votes)
     votes[-1] = votes[0]
     return votes
-    #return 1 if sum(votes) > len(voters) / 2 else 0
+    # return 1 if sum(votes) > len(voters) / 2 else 0
 
 
 def evaluate_decision(case, votes):
@@ -77,9 +80,9 @@ def main():
             if case == decision:
                 rights += 1
             elif case > decision:
-                false_positives +=1
+                false_positives += 1
             else:
-                positive_falses +=1
+                positive_falses += 1
 
             evaluation = evaluate_decision(case, votes)
             if evaluation == 0:
