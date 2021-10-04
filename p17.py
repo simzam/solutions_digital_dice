@@ -31,8 +31,9 @@ def generate_buses(num_buses):
 
 def main():
     simulations = 100000
+    max_number_buses = 10
     print("i: number of buses\nwait: waiting time in hours\n")
-    for i in range(10):
+    for i in range(max_number_buses):
         waiting_time = 0
         for _ in range(simulations):
             buses = generate_buses(i)
