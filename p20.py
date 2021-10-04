@@ -11,7 +11,9 @@ picked later
 4) If the population is exhausted the last element sampled
 will be chosen.
 
-# TODO: complete presentation of problem and program
+This program will simulate three different success requirements, top
+2, 3, or 4. For each of these sample sizes from 0 to population - 1
+woll be plotted
 """
 import random
 from matplotlib import pyplot as plt
