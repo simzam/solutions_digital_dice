@@ -1,55 +1,84 @@
+"""Problem 20: An Optimal Stopping Problem
+
+To choose an element in a population of known size under the rules
+below:
+
+1)_Total population of known size.
+2) The elements in the population
+can be sampled.
+3) If an element is sampled and rejected, it can't be
+picked later
+4) If the population is exhausted the last element sampled
+will be chosen.
+
+# TODO: complete presentation of problem and program
+"""
 import random
+from matplotlib import pyplot as plt
 
 
-def loop_until(population, lim):
-    """ loops over list until element is bigger than lim."""
-    for p in population:
-        if p > lim:
-            return p
+def draw_element(n):
+    """ Draws a random int from [1, 2, ... , n] """
+    return int((random.random()*n) // 1) + 1
+
+
+def draw_sample(sample_size, n):
+    """ Draws a sample of unique ints from [1, 2, .. , n]. """
+    sample = set()
+    i = 0
+    while i < sample_size:
+        sample.add(draw_element(n))
+        if len(sample) < 1 + 1:
+            continue
+        i += 1
+    return sample
+
+
+def experiment(sample_size, n, accepted_size):
+    if sample_size > n:
+        print("Can't sample whole or more of the population, {} > {}".format(
+            sample_size, n))
+        return
+
+    top_candidates = (i for i in range(n, n - accepted_size, -1))
+    sample = draw_sample(sample_size, n)
+    sample_max = max(sample)
+
+    i = sample_size
+    while i < n:
+        candidate = draw_element(n)
+        if candidate in sample:
+            continue
+        if candidate > sample_max:
+            if candidate in top_candidates:
+                return 1
+            return 0
+        i += 1
     return 0
 
 
-def test_loop_until():
-    population = [1, 2, 3, 4]
-    lim = 3
-    assert loop_until(population, lim) == 4
-    lim = 0
-    assert loop_until(population, lim) == 1
-    lim = 5
-    assert loop_until(population, lim) == 0
-
-
-def simulate(population, sample_size, contentment, simulations):
-    hits = 0
-    for _ in range(simulations):
-        random.shuffle(population)
-        # print(population, sample_size, population[:sample_size])
-        if sample_size > 0:
-            best_sample = max(population[:sample_size])
-            chosen_partner = loop_until(population[sample_size:], best_sample)
-        else:
-            chosen_partner = population[0]
-        if chosen_partner == 0:
-            continue
-        else:
-            # is chosen partner satisfactory??
-            if chosen_partner >= max(population) - contentment:
-                hits += 1
-    return hits / simulations
+def simulate(population, contentment, simulations):
+    hit_rates = []
+    for sample_size in range(1, population):
+        hits = 0
+        for _ in range(simulations):
+            hits += experiment(sample_size, population, contentment)
+        hit_rates.append(hits / simulations)
+    return hit_rates
 
 
 def main():
-    simulations = 10000
-    population = [i for i in range(1, 51)]
-    # contentment = [1, 2, 3, 4, 5]
+    acceptable_places = [2, 3, 4]
+    population = 50
+    simulations = 1000
 
-    sample_sizes = [i for i in range(50)]
-    ''
-    hit_rates = []
-    for sample_size in sample_sizes:
-        hit_rates.append(simulate(population, sample_size, 5, simulations))
-    for sample_size, hit_rate in zip(sample_sizes, hit_rates):
-        print("{} {}".format(sample_size, hit_rate))
+    for acceptable in acceptable_places:
+        plt.plot(simulate(population, acceptable,
+                          simulations), label="top {}".format(acceptable))
+    plt.legend()
+    plt.xlabel("Sample size")
+    plt.ylabel("hitrate")
+    plt.show()
 
 
 if __name__ == '__main__':
