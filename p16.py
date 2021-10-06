@@ -42,9 +42,7 @@ def simulate(simulations, guilty_percentage, correct_verdicts, copy_cat_judge):
     made_correct_verdict = 0
 
     for _ in range(simulations):
-        case = make_case(guilty_percentage)
         votes = list(map(make_case, correct_verdicts))
-        # print(case, votes)
         if copy_cat_judge:
             votes[-1] = votes[0]
 
@@ -52,7 +50,7 @@ def simulate(simulations, guilty_percentage, correct_verdicts, copy_cat_judge):
         all_rights += cons[0]
         all_wrongs += cons[1]
         made_correct_verdict += evaluate_decision(votes)
-        print(votes, all_rights, all_wrongs)
+
     return made_correct_verdict / simulations, all_rights, all_wrongs
 
 
