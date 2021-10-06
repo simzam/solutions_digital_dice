@@ -1,98 +1,92 @@
-"""
-Problem 16
+"""Problem 16
 
 decision making organ consisting of five separate and indedenpendent
 voters.  These voters will make a decision with two possible outcomes,
 yes or no. This decision might be right or wrong.
 
-The decision is made by simple majority. The decisions can either be right or wrong.
+The decision is made by simple majority. The decisions can either be
+right or wrong.
 
 """
-import math
 import random
-
-sims = 10000
+from matplotlib import pyplot as plt
 
 
 def make_case(p):
-    if random.random() < p:
+    if random.random() > p:
         return 0
     else:
         return 1
 
 
-def decide_case(case, voters):
-    votes = [-1] * len(voters)
-    for i, voter in enumerate(voters):
-        if random.random() < voter:
-            votes[i] = case
-        else:
-            votes[i] = (case + 1) % 2
-    #print(case, votes)
-    return votes
-    # return 1 if sum(votes) > len(voters) / 2 else 0
-
-
-def decide_case2(case, voters):
-    votes = [-1] * len(voters)
-    for i, voter in enumerate(voters):
-        if random.random() < voter:
-            votes[i] = case
-        else:
-            votes[i] = (case + 1) % 2
-    #print(case, votes)
-    votes[-1] = votes[0]
-    return votes
-    # return 1 if sum(votes) > len(voters) / 2 else 0
-
-
-def evaluate_decision(case, votes):
-    if sum(votes) == len(votes) and case == 1:
+def evaluate_decision(votes):
+    if sum(votes) >= 3:
         return 1
-    elif sum(votes) == 0 and case == 0:
-        return 1
+    return 0
+
+
+def consensus(votes):
+    if sum(votes) == len(votes):
+        return 1, 0
+    elif sum(votes) == 0:
+        return 0, 1
     else:
-        return 0
+        return 0, 0
 
 
-def main():
-    voters_hit_percentages = [0.95, 0.95, 0.9, 0.9, 0.8]
-    percentages_false = [0] + [i/100 for i in range(1, 11)]
-    decisions = [[-1, -1, -1] for _ in percentages_false]
-
+def simulate(simulations, guilty_percentage, correct_verdicts, copy_cat_judge):
     all_rights = 0
     all_wrongs = 0
 
-    rights = 0
+    votes = ['NaN' for _ in correct_verdicts]
+    made_correct_verdict = 0
 
-    for i, p in enumerate(percentages_false):
-        #rights = 0
-        positive_falses = 0
-        false_positives = 0
-        for _ in range(sims):
-            case = make_case(p)
-            votes = decide_case2(case, voters_hit_percentages)
-            if sum(votes) > len(votes) / 2:
-                decision = 1
-            else:
-                decision = 0
-            # print(case, decision)
-            if case == decision:
-                rights += 1
-            elif case > decision:
-                false_positives += 1
-            else:
-                positive_falses += 1
+    for _ in range(simulations):
+        case = make_case(guilty_percentage)
+        votes = list(map(make_case, correct_verdicts))
+        # print(case, votes)
+        if copy_cat_judge:
+            votes[-1] = votes[0]
 
-            evaluation = evaluate_decision(case, votes)
-            if evaluation == 0:
-                all_wrongs += 1
-            elif evaluation == 1:
-                all_rights += 1
-        simulation_conclusion = [rights, positive_falses, false_positives]
-        decisions[i] = simulation_conclusion
+        cons = consensus(votes)
+        all_rights += cons[0]
+        all_wrongs += cons[1]
+        made_correct_verdict += evaluate_decision(votes)
+        print(votes, all_rights, all_wrongs)
+    return made_correct_verdict / simulations, all_rights, all_wrongs
 
-    print(1 - (rights / (sims * len(percentages_false))))
+
+def main():
+    percentage_correct_verdict = [0.95, 0.95, 0.9, 0.9, 0.8]
+    guilty_percentages = [i/100 for i in range(100)]
+
+    simulations = 1000
+    indp_x_vals = []
+    copy_x_vals = []
+
+    ar, aw = 0, 0
+
+    for guilty_percentage in guilty_percentages:
+        indp_judge, iar, iaw = simulate(simulations,
+                                        guilty_percentage,
+                                        percentage_correct_verdict,
+                                        False)
+        copy_judge, car, caw = simulate(simulations,
+                                        guilty_percentage,
+                                        percentage_correct_verdict,
+                                        True)
+        ar += iar  # + car
+        aw += iaw  # + caw
+
+        indp_x_vals.append(indp_judge)
+        copy_x_vals.append(copy_judge)
+    # uncomment line below for verification of code
+    # print(ar / simulations, aw / simulations)
+
+    plt.plot(copy_x_vals, label="Judge 5 always copy judge 1")
+    plt.plot(indp_x_vals, label="All judge independent")
+    plt.legend()
+    plt.show()
 
 
 if __name__ == '__main__':
