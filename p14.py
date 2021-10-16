@@ -1,13 +1,22 @@
-import random
+""" Problem 14: Parrondo's Paradox
 
+Problem illustrates that when choosing between two losing games
+choosing randomly between these games can be winning. Hence the
+paradox.
+"""
+import random
 import matplotlib.pyplot as plt
 
 
 def game_a(eps):
+    ''' simulates a game of coin toss with biased coin (eps). '''
     return 1 if random.random() < 0.5 - eps else -1
 
 
 def game_b(eps, capital):
+    ''' simulates a game of coin toss using two different coins. if the
+player's capital is a multiple of 3 the first coin is used otherwise
+the other coin is used'''
     if capital % 3 == 0:
         return 1 if random.random() < 0.1 - eps else -1
     else:
@@ -23,6 +32,7 @@ def run_single_games(k_a, k_b, eps, num_games):
         mk_a.append(k_a)
         mk_b.append(k_b)
     return mk_a, mk_b
+
 
 def run_random_game(k, eps, num_games):
     mk = [k]
@@ -43,11 +53,17 @@ def component_div_list(lst, num):
     return [elem / num for elem in lst]
 
 
-def main(k = 0, num_games = 100, simulations = 10000):
+def main(k=0, num_games=100, simulations=10000):
+    # results from playing only game a.
     sum_game_a = [0] * (num_games + 1)
+
+    # results from playing only game b.
     sum_game_b = [0] * (num_games + 1)
+
+    # results from playing game a and game b randomly.
     sum_game_mixed = [0] * (num_games + 1)
 
+    # the coin bias
     eps = 0.005
 
     for _ in range(simulations):
@@ -58,12 +74,11 @@ def main(k = 0, num_games = 100, simulations = 10000):
         sum_game_mixed = component_add_list(sum_game_mixed, tmp_mixed)
     x_coordinates = [i for i in range(num_games + 1)]
 
-
-    print(sum_game_a)
     plt.plot(x_coordinates, component_div_list(sum_game_a, simulations))
     plt.plot(x_coordinates, component_div_list(sum_game_b, simulations))
     plt.plot(x_coordinates, component_div_list(sum_game_mixed, simulations))
     plt.show()
+
 
 if __name__ == '__main__':
     main()
