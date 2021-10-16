@@ -1,9 +1,12 @@
 
-import numpy as np
-"""
-Simulation of a queue
+"""Problem 15: How Long is the Wait
 
-The customers in the queue are served by a number of "workers". The arrival of customers are modeled as Poisson process with a fixed rate. The service time of the workers are also simulated as a Poisson process with a fixed rate.
+Simulation of a queue in a deli store using FCFS principle.
+
+The customers in the queue are served by a number of "workers". The
+arrival of customers are modeled as Poisson process with a fixed
+rate. The service time of the workers are also simulated as a Poisson
+process with a fixed rate.
 
 This simulation attempts to answer the following questions:
 
@@ -12,8 +15,8 @@ This simulation attempts to answer the following questions:
 3) What is the average length of the waiting queue?
 4) What is the maximum length of the waiting queue?
 5) What fraction of time is spent idle by the clerk(s)?
-
 """
+import numpy as np
 
 
 def simulate(workers, opening_seconds, customers_rate, service_rate):
